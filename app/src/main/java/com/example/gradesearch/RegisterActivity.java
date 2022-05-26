@@ -10,8 +10,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.gradesearch.Dao.MyDao;
+import com.example.gradesearch.Dao.NewBase;
 
-public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
+public class RegisterActivity extends AppCompatActivity implements View.OnClickListener{
 
     private EditText etUsername;
     private EditText etPasswordSet;
@@ -43,11 +44,16 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 if(isEmptyForText()){
                     if(isSamePassword()){
                         //将注册信息存入数据库
-                        MyDao dao=new MyDao(this);
-                        dao.add_user(name,password);
-                        Toast.makeText(this,"注册成功",Toast.LENGTH_LONG).show();
+                        NewBase mytbase=new NewBase(this);
+                        try {
+                            mytbase.getDb().execSQL("insert into users(name,password)values(?,?)", new String[]{name,password});
+                            Toast.makeText(this, "注册成功", Toast.LENGTH_SHORT).show();
+                        } catch (Exception e){
+                            Toast.makeText(this, "插入失败，语法有错误！", Toast.LENGTH_SHORT).show();
+                        }
+
                         //注册成功，返回登录页面
-                        startActivity(new Intent(this, com.example.gradesearch.LoginActivity.class));
+                        startActivity(new Intent(this,LoginActivity.class));
                     }
                 }
                 break;
@@ -107,6 +113,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             });
             AlertDialog dialog = builder.create();
             dialog.show();
+            return false;
         }
         return true;
     }
