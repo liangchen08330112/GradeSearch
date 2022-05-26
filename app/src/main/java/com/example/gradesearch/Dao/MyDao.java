@@ -19,6 +19,7 @@ public class MyDao {
         db.execSQL("insert into "+ com.example.gradesearch.Dao.Constants.TABLE_NAME_USER+"(user_name,user_password) values(?,? )",
                 new Object[]{user_name,user_password});}
     @SuppressLint("Range")
+    //
     public  boolean check_password(String user_name, String user_password){
         SQLiteDatabase db = helper.getReadableDatabase();
         String name = "",password="";
